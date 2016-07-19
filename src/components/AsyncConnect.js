@@ -15,8 +15,7 @@ export default class AsyncConnect extends Component {
     params: PropTypes.object.isRequired,
     render: PropTypes.func.isRequired,
     beginGlobalLoad: PropTypes.func.isRequired,
-    endGlobalLoad: PropTypes.func.isRequired,
-    helpers: PropTypes.any
+    endGlobalLoad: PropTypes.func.isRequired
   };
 
   static contextTypes = {
