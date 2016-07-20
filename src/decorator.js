@@ -39,10 +39,6 @@ function wrapWithStore(asyncItems) {
 /**
  * Exports decorator, which wraps React components with asyncConnect and connect at the same time
  * @param  {Array} asyncItems
- * @param  {Function} [mapStateToProps]
- * @param  {Object|Function} [mapDispatchToProps]
- * @param  {Function} [mergeProps]
- * @param  {Object} [options]
  * @return {Function}
  */
 export function asyncConnect(asyncItems) {
@@ -54,7 +50,7 @@ export function asyncConnect(asyncItems) {
 
       return {
         ...result,
-        [key]: store.mobxAsyncConnect.loadState[key].result
+        [key]: store.mobxAsyncConnect[key]
       };
     }, {});
 

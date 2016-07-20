@@ -1,4 +1,4 @@
-import { observable, action } from 'mobx';
+import { extendObservable, action } from 'mobx';
 
 const initialState = {
   loaded: false,
@@ -6,13 +6,9 @@ const initialState = {
 };
 
 export default class MobxAsyncConnectStore {
-  @observable loaded = false;
-  @observable loadState = {};
-
   constructor(state = initialState) {
     state = Object.assign({}, initialState, state);
-    this.loaded = state.loaded;
-    this.loadState = state.loadState;
+    extendObservable(this, state);
   }
 
   @action
@@ -27,53 +23,44 @@ export default class MobxAsyncConnectStore {
 
   @action
   load(key) {
-    this.loadState = {
-      ...this.loadState,
-      [key]: {
-        loading: true,
-        loaded: false
-      }
+    this.loadState[key] = {
+      loading: true,
+      loaded: false
     };
   }
 
   @action
   loadSuccess(key, data) {
-    this.loadState = {
-      ...this.loadState,
-      [key]: {
-        loading: false,
-        loaded: true,
-        error: null,
-        result: data
-      }
+    this.loadState[key] = {
+      loading: false,
+      loaded: true,
+      error: null
     };
+
+    extendObservable(this, {
+      [key]: data
+    });
   }
 
   @action
   loadFail(key, error) {
-    delete this.loadState[key].result;
+    delete this[key];
 
-    this.loadState = {
-      ...this.loadState,
-      [key]: {
-        loading: false,
-        loaded: false,
-        error
-      }
+    this.loadState[key] = {
+      loading: false,
+      loaded: false,
+      error
     };
   }
 
   @action
   clearKey(key) {
-    delete this.loadState[key].result;
+    delete this[key];
 
-    this.loadState = {
-      ...this.loadState,
-      [key]: {
-        loading: false,
-        loaded: false,
-        error: null
-      }
+    this.loadState[key] = {
+      loading: false,
+      loaded: false,
+      error: null
     };
   }
 }

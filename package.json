@@ -20,8 +20,8 @@
   "homepage": "https://github.com/bertho-zero/mobx-async-connect#readme",
   "peerDependencies": {
     "react": "0.14.x || 15.x.x",
-    "mobx-react": "~3.5.1",
-    "react-router": "~2.6.0"
+    "mobx-react": "2.x.x || 3.x.x",
+    "react-router": "2.x.x"
   },
   "devDependencies": {
     "babel-cli": "^6.10.1",
