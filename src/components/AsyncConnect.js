@@ -1,6 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import RouterContext from 'react-router/lib/RouterContext';
 import { loadAsyncConnect } from '../utils';
+import { observable } from 'mobx';
 import { observer, inject } from 'mobx-react';
 
 @inject((store, props) => ({
@@ -28,12 +29,12 @@ export default class AsyncConnect extends Component {
     }
   };
 
+  @observable propsToShow = {};
+
   constructor(props, context) {
     super(props, context);
 
-    this.state = {
-      propsToShow: this.isLoaded() ? props : null
-    };
+    this.propsToShow = this.isLoaded() ? props : null;
 
     this.mounted = false;
     this.loadDataCounter = 0;
@@ -51,10 +52,6 @@ export default class AsyncConnect extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.loadAsyncData(nextProps);
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return this.state.propsToShow !== nextState.propsToShow;
   }
 
   componentWillUnmount() {
@@ -78,7 +75,7 @@ export default class AsyncConnect extends Component {
       // when user is changing route several times and we finally show him route that has
       // loaded props last time and not the last called route
       if (this.loadDataCounter === loadDataCounterOriginal && this.mounted !== false) {
-        this.setState({ propsToShow: props });
+        this.propsToShow = props;
       }
 
       // TODO: investigate race conditions
@@ -88,7 +85,6 @@ export default class AsyncConnect extends Component {
   }
 
   render() {
-    const { propsToShow } = this.state;
-    return propsToShow && this.props.render(propsToShow);
+    return this.propsToShow && this.props.render(this.propsToShow);
   }
 }
